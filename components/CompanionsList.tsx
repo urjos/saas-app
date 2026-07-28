@@ -8,8 +8,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn, getSubjectColor } from "@/lib/utils";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 
 interface CompanionsListProps {
   title: string;
@@ -23,8 +23,8 @@ const CompanionsList = ({
   classNames,
 }: CompanionsListProps) => {
   return (
-    <article className={cn("company-list", classNames)}>
-      <h2 className="font-bold text-3xl">Recents Sessions</h2>
+    <article className={cn("companion-list", classNames)}>
+      <h2 className="font-bold text-3xl">{title}</h2>
 
       <Table>
         <TableHeader>
@@ -39,9 +39,9 @@ const CompanionsList = ({
             <TableRow key={id}>
               <TableCell>
                 <Link href={`/companions/${id}`}>
-                  <div className="flex items-center gap.2">
+                  <div className="flex items-center gap-2">
                     <div
-                      className="flex size-72px items-center justify-center rounded-lg max-md:hidden"
+                      className="size-[72px] flex items-center justify-center rounded-lg max-md:hidden"
                       style={{ backgroundColor: getSubjectColor(subject) }}
                     >
                       <Image
@@ -81,7 +81,7 @@ const CompanionsList = ({
                   </p>
                   <Image
                     src="/icons/clock.svg"
-                    alt="duration"
+                    alt="minutes"
                     width={14}
                     height={14}
                     className="md:hidden"
