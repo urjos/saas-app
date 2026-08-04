@@ -1,13 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import Navitems from "./Navitems";
-import {
-  SignInButton,
-  UserButton,
-  Show,
-  SignUpButton,
-  SignOutButton,
-} from "@clerk/nextjs";
+import { SignInButton, UserButton, Show } from "@clerk/nextjs";
 
 const Navbar = () => {
   return (
@@ -20,14 +16,12 @@ const Navbar = () => {
       <div className="flex items-center gap-8">
         <Navitems />
         <Show when="signed-out">
-          <SignOutButton>
-            <SignInButton>
-              <button className="btn-signin cursor-pointer">Sign In</button>
-            </SignInButton>
-          </SignOutButton>
+          <SignInButton>
+            <button className="btn-signin cursor-pointer">Sign In</button>
+          </SignInButton>
         </Show>
         <Show when="signed-in">
-          <UserButton afterSignOutUrl="/" />
+          <UserButton />
         </Show>
       </div>
     </nav>
