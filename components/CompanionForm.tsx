@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 //import { createCompanion } from "@/lib/actions/companion.actions";
 import { redirect } from "next/navigation";
 import { Label } from "./ui/label";
+import { createCompanion } from "@/lib/actions/companions.actions";
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Companion is required." }),
@@ -47,14 +48,14 @@ const CompanionForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // const companion = await createCompanion(values);
-    /*if (companion) {
+    const companion = await createCompanion(values);
+
+    if (companion) {
       redirect(`/companions/${companion.id}`);
     } else {
-      console.log("Failed to create a companion");
+      console.error("Failed to create companion");
       redirect("/");
-    }*/
-    console.log(values);
+    }
   };
 
   return (
