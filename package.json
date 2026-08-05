@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^5.4.0",
     "@jsmastery/utils": "^1.0.2",
     "@supabase/supabase-js": "^2.112.0",
+    "@vapi-ai/web": "^2.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.24.0",
