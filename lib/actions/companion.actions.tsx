@@ -9,11 +9,11 @@ export const createCompanion = async (formData: CreateCompanion) => {
 
   const { data, error } = await supabase
     .from("companions")
-    .insert({ formData, author })
+    .insert({ ...formData, author })
     .select();
 
   if (error || !data)
-    throw new Error(error?.message || "Failed to create companion");
+    throw new Error(error?.message || "Failed to create a companion");
 
   return data[0];
 };
