@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -18,8 +18,14 @@ const SubjectFilter = () => {
   const query = searchParams.get("subject") || "";
 
   const [subject, setSubject] = useState(query);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
     let newUrl = "";
     if (subject === "all") {
       newUrl = removeKeysFromUrlQuery({
