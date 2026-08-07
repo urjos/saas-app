@@ -152,7 +152,7 @@ const CompanionComponent = ({
           <div className="user-avatar">
             <Image
               src={userImage}
-              alt={userName}
+              alt={userName || "User avatar"}
               width={130}
               height={130}
               className="rounded-lg"
