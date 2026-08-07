@@ -24,15 +24,6 @@ const Page = async () => {
             color={getSubjectColor(companion.subject)}
           />
         ))}
-
-        <CompanionCard
-          id="123"
-          name="Neura the Brainy Explorer"
-          topic="Neural Network of the Brain"
-          subject="science"
-          duration={45}
-          color="#ffda6e"
-        />
       </section>
 
       <section className="home-section">
