@@ -157,3 +157,18 @@ export const getBookmarkedCompanions = async (userId: string) => {
   // We don't need the bookmarks data, so we return only the companions
   return data.map(({ companions }) => companions);
 };
+
+export const getBookmarkedCompanionIds = async () => {
+  const { userId } = await auth();
+  if (!userId) return new Set<string>();
+
+  const supabase = createSupabaseClient();
+  const { data, error } = await supabase
+    .from("bookmarks")
+    .select("companion_id")
+    .eq("user_id", userId);
+
+  if (error) throw new Error(error.message);
+
+  return new Set(data.map(({ companion_id }) => companion_id));
+};

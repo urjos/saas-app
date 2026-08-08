@@ -38,9 +38,7 @@ const CompanionCard = ({
         <button className="companion-bookmark" onClick={handleBookmark}>
           <Image
             src={
-              bookmarked
-                ? "../public/icons/bookmark-filled.svg"
-                : "../public/icons/bookmark.svg"
+              bookmarked ? "/icons/bookmark-filled.svg" : "/icons/bookmark.svg"
             }
             alt="bookmark"
             width={12.5}
