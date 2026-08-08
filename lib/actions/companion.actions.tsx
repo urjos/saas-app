@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { createSupabaseClient } from "../supabase";
+import { createSupabaseClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
 export const createCompanion = async (formData: CreateCompanion) => {
@@ -64,9 +64,10 @@ export const getCompanion = async (id: string) => {
 export const addToSessionHistory = async (companionId: string) => {
   const { userId } = await auth();
   const supabase = createSupabaseClient();
-  const { data, error } = await supabase
-    .from("session_history")
-    .insert({ companion_id: companionId, user_id: userId });
+  const { data, error } = await supabase.from("session_history").insert({
+    companion_id: companionId,
+    user_id: userId,
+  });
 
   if (error) throw new Error(error.message);
 
@@ -110,6 +111,36 @@ export const getUserCompanions = async (userId: string) => {
   if (error) throw new Error(error.message);
 
   return data;
+};
+
+export const newCompanionPermissions = async () => {
+  const { userId, has } = await auth();
+  const supabase = createSupabaseClient();
+
+  let limit = 0;
+
+  if (has({ plan: "pro" })) {
+    return true;
+  } else if (has({ feature: "3_companion_limit" })) {
+    limit = 3;
+  } else if (has({ feature: "10_companion_limit" })) {
+    limit = 3;
+  }
+
+  const { data, error } = await supabase
+    .from("companions")
+    .select("id", { count: "exact" })
+    .eq("author", userId);
+
+  if (error) throw new Error(error.message);
+
+  const companionCount = data?.length;
+
+  if (companionCount >= limit) {
+    return false;
+  } else {
+    return true;
+  }
 };
 
 export const addBookmark = async (companionId: string, path: string) => {
