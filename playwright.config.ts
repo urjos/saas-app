@@ -15,12 +15,22 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
-    { name: "setup", testMatch: /global\.setup\.ts/ },
+    { name: "setup", testMatch: /auth\.setup\.ts/ },
     {
-      name: "chromium",
+      // Sin sesión: incluye la comprobación de redirección a /sign-in
+      name: "public",
       use: { ...devices["Desktop Chrome"] },
+      testMatch: /public\.spec\.ts/,
+    },
+    {
+      // Con la sesión guardada por el proyecto "setup"
+      name: "authenticated",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "playwright/.auth/user.json",
+      },
       dependencies: ["setup"],
-      testIgnore: /global\.setup\.ts/,
+      testMatch: /create-companion\.spec\.ts/,
     },
   ],
   webServer: {

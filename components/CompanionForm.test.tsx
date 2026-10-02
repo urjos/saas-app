@@ -3,13 +3,13 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 const createCompanion = vi.fn();
-const redirect = vi.fn();
+const push = vi.fn();
 
 vi.mock("@/lib/actions/companion.actions", () => ({
   createCompanion: (...args: unknown[]) => createCompanion(...args),
 }));
 vi.mock("next/navigation", () => ({
-  redirect: (...args: unknown[]) => redirect(...args),
+  useRouter: () => ({ push: (...args: unknown[]) => push(...args) }),
 }));
 
 import CompanionForm from "./CompanionForm";
@@ -104,7 +104,7 @@ describe("CompanionForm", () => {
       }),
     );
     await waitFor(() =>
-      expect(redirect).toHaveBeenCalledWith("/companions/new-id"),
+      expect(push).toHaveBeenCalledWith("/companions/new-id"),
     );
   });
 });

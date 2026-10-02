@@ -15,8 +15,7 @@ import {
 import { Field, FieldGroup } from "@/components/ui/field";
 import { subjects } from "@/constants";
 import { Textarea } from "@/components/ui/textarea";
-//import { createCompanion } from "@/lib/actions/companion.actions";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { createCompanion } from "@/lib/actions/companion.actions";
 
@@ -47,14 +46,16 @@ const CompanionForm = () => {
     },
   });
 
+  const router = useRouter();
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     const companion = await createCompanion(values);
 
     if (companion) {
-      redirect(`/companions/${companion.id}`);
+      router.push(`/companions/${companion.id}`);
     } else {
       console.error("Failed to create companion");
-      redirect("/");
+      router.push("/");
     }
   };
 
