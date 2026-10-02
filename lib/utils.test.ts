@@ -21,7 +21,10 @@ describe("configureAssistant", () => {
   });
   it("incluye las variables que Vapi reemplaza en el prompt", () => {
     const assistant = configureAssistant("female", "formal");
-    const system = (assistant.model as any).messages[0].content;
+    const model = assistant.model as unknown as {
+      messages: { content: string }[];
+    };
+    const system = model.messages[0].content;
     expect(system).toContain("{{ topic }}");
     expect(system).toContain("{{ subject }}");
     expect(system).toContain("{{ style }}");

@@ -13,7 +13,9 @@ vi.mock("@/lib/supabase", () => ({
 
 import { newCompanionPermissions } from "./companion.actions";
 
-const withPlan = (has: (query: any) => boolean) =>
+type HasQuery = { plan?: string; feature?: string };
+
+const withPlan = (has: (query: HasQuery) => boolean) =>
   authMock.mockResolvedValue({ userId: "user_1", has });
 
 const companions = (n: number) => ({
