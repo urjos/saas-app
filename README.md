@@ -8,7 +8,7 @@ Traditional digital learning is predominantly passive and text-dense, which ofte
 
 ## Demo
 
-- **Live Deployment:** `TODO: add live URL` _(deployment in progress)_
+- **Live Deployment:** `https://saas-app-zeta-ashy.vercel.app/`
 
 ---
 
