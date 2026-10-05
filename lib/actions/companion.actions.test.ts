@@ -3,15 +3,18 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 const authMock = vi.fn();
 const eqMock = vi.fn();
 
+const fromMock = vi.fn(() => ({ select: () => ({ eq: eqMock }) }));
+
 vi.mock("@clerk/nextjs/server", () => ({ auth: () => authMock() }));
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
 vi.mock("@/lib/supabase", () => ({
   createSupabaseClient: () => ({
-    from: () => ({ select: () => ({ eq: eqMock }) }),
+    from: fromMock,
   }),
 }));
 
-import { newCompanionPermissions } from "./companion.actions";
+import { newCompanionPermissions, createCompanion } from "./companion.actions";
+import type { CompanionInput } from "@/lib/schemas/companion";
 
 type HasQuery = { plan?: string; feature?: string };
 
@@ -58,5 +61,28 @@ describe("newCompanionPermissions", () => {
     withPlan((q) => q.feature === "3_companion_limit");
     eqMock.mockResolvedValueOnce({ data: null, error: { message: "db down" } });
     await expect(newCompanionPermissions()).rejects.toThrow("db down");
+  });
+});
+
+describe("createCompanion", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("con datos inválidos devuelve { ok: false } y NO llama a Supabase", async () => {
+    const invalidData = {
+      name: "",
+      subject: "astrology",
+      topic: "",
+      voice: "unknown",
+      style: "unknown",
+      duration: -1,
+    } as unknown as CompanionInput;
+
+    const result = await createCompanion(invalidData);
+
+    expect(result.ok).toBe(false);
+    if (!result.ok) {
+      expect(result.error).toBe("Companion is required.");
+    }
+    expect(fromMock).not.toHaveBeenCalled();
   });
 });
