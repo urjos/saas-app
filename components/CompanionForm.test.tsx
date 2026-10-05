@@ -77,7 +77,7 @@ describe("CompanionForm", () => {
   });
 
   it("con datos válidos crea el companion y redirige a su página", async () => {
-    createCompanion.mockResolvedValue({ id: "new-id" });
+    createCompanion.mockResolvedValue({ ok: true, data: { id: "new-id" } });
     const user = userEvent.setup();
     render(<CompanionForm />);
 

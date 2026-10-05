@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -18,15 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { createCompanion } from "@/lib/actions/companion.actions";
-
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Companion is required." }),
-  subject: z.string().min(1, { message: "Subject is required." }),
-  topic: z.string().min(1, { message: "Topic is required." }),
-  voice: z.string().min(1, { message: "Voice is required." }),
-  style: z.string().min(1, { message: "Style is required." }),
-  duration: z.number().min(1, { message: "Duration is required." }),
-});
+import { companionSchema, CompanionInput } from "@/lib/schemas/companion";
 
 const CompanionForm = () => {
   const {
@@ -34,27 +25,27 @@ const CompanionForm = () => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  } = useForm<CompanionInput>({
+    resolver: zodResolver(companionSchema),
     defaultValues: {
       name: "",
-      subject: "",
+      subject: undefined,
       topic: "",
-      voice: "",
-      style: "",
+      voice: undefined,
+      style: undefined,
       duration: 15,
     },
   });
 
   const router = useRouter();
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    const companion = await createCompanion(values);
+  const onSubmit = async (values: CompanionInput) => {
+    const result = await createCompanion(values);
 
-    if (companion) {
-      router.push(`/companions/${companion.id}`);
+    if (result.ok) {
+      router.push(`/companions/${result.data.id}`);
     } else {
-      console.error("Failed to create companion");
+      console.error(result.error);
       router.push("/");
     }
   };
@@ -88,8 +79,7 @@ const CompanionForm = () => {
               render={({ field }) => (
                 <Select
                   onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue={field.value}
+                  value={field.value ?? ""}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select the subject" />
@@ -135,8 +125,7 @@ const CompanionForm = () => {
               render={({ field }) => (
                 <Select
                   onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue={field.value}
+                  value={field.value ?? ""}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select the voice" />
@@ -163,8 +152,7 @@ const CompanionForm = () => {
               render={({ field }) => (
                 <Select
                   onValueChange={field.onChange}
-                  value={field.value}
-                  defaultValue={field.value}
+                  value={field.value ?? ""}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select the style" />

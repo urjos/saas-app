@@ -4,19 +4,36 @@ import { auth } from "@clerk/nextjs/server";
 import { createSupabaseClient } from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
 
-export const createCompanion = async (formData: CreateCompanion) => {
+import { companionSchema, CompanionInput } from "@/lib/schemas/companion";
+import { ActionResult } from "@/lib/types";
+
+export const createCompanion = async (
+  formData: CompanionInput,
+): Promise<ActionResult<Companion>> => {
+  const validation = companionSchema.safeParse(formData);
+  if (!validation.success) {
+    return {
+      ok: false,
+      error: validation.error.issues[0]?.message || "Invalid companion data",
+    };
+  }
+
   const { userId: author } = await auth();
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
     .from("companions")
-    .insert({ ...formData, author })
+    .insert({ ...validation.data, author })
     .select();
 
-  if (error || !data)
-    throw new Error(error?.message || "Failed to create a companion");
+  if (error || !data || data.length === 0) {
+    return {
+      ok: false,
+      error: error?.message || "Failed to create a companion",
+    };
+  }
 
-  return data[0];
+  return { ok: true, data: data[0] };
 };
 
 export const getAllCompanions = async ({

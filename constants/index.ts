@@ -5,7 +5,9 @@ export const subjects = [
   "history",
   "coding",
   "economics",
-];
+] as const;
+
+export type Subject = (typeof subjects)[number];
 
 export const subjectsColors = {
   science: "#E5D0FF",
@@ -14,12 +16,18 @@ export const subjectsColors = {
   coding: "#FFC8E4",
   history: "#FFECC8",
   economics: "#C8FFDF",
-};
+} satisfies Record<Subject, string>;
+
+export const voiceOptions = ["male", "female"] as const;
+export type VoiceOption = (typeof voiceOptions)[number];
+
+export const styleOptions = ["formal", "casual"] as const;
+export type StyleOption = (typeof styleOptions)[number];
 
 export const voices = {
   male: { casual: "2BJW5coyhAzSr8STdHbE", formal: "c6SfcYrb2t09NHXiT80T" },
   female: { casual: "ZIlrSGI4jZqobxRKprJz", formal: "sarah" },
-};
+} satisfies Record<VoiceOption, Record<StyleOption, string>>;
 
 export const recentSessions = [
   {
