@@ -9,18 +9,15 @@ type Subject = (typeof import("@/constants").subjects)[number];
 type VoiceOption = (typeof import("@/constants").voiceOptions)[number];
 type StyleOption = (typeof import("@/constants").styleOptions)[number];
 
-interface Companion {
-  id: string;
-  name: string;
+type Companion = Omit<
+  import("@/types/database.types").Tables<"companions">,
+  "subject" | "voice" | "style"
+> & {
   subject: Subject;
-  topic: string;
   voice: VoiceOption;
   style: StyleOption;
-  duration: number;
-  author: string;
-  created_at?: string;
   bookmarked?: boolean;
-}
+};
 
 type GetAllCompanions = Partial<Pick<Companion, "topic">> & {
   limit?: number;

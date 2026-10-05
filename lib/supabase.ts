@@ -1,8 +1,9 @@
 import { createClient } from "@supabase/supabase-js";
 import { auth } from "@clerk/nextjs/server";
+import { Database } from "@/types/database.types";
 
 export const createSupabaseClient = () => {
-  return createClient(
+  return createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {

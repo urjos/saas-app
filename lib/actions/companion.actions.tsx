@@ -19,6 +19,12 @@ export const createCompanion = async (
   }
 
   const { userId: author } = await auth();
+  if (!author) {
+    return {
+      ok: false,
+      error: "Unauthorized",
+    };
+  }
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
@@ -33,7 +39,7 @@ export const createCompanion = async (
     };
   }
 
-  return { ok: true, data: data[0] };
+  return { ok: true, data: data[0] as unknown as Companion };
 };
 
 export const getAllCompanions = async ({
@@ -65,7 +71,7 @@ export const getAllCompanions = async ({
   return (companions ?? []) as unknown as Companion[];
 };
 
-export const getCompanion = async (id: string) => {
+export const getCompanion = async (id: string): Promise<Companion | null> => {
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
@@ -73,13 +79,14 @@ export const getCompanion = async (id: string) => {
     .select()
     .eq("id", id);
 
-  if (error) return console.log(error);
+  if (error || !data || data.length === 0) return null;
 
-  return data[0];
+  return data[0] as unknown as Companion;
 };
 
 export const addToSessionHistory = async (companionId: string) => {
   const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
   const supabase = createSupabaseClient();
   const { data, error } = await supabase.from("session_history").insert({
     companion_id: companionId,
@@ -147,6 +154,7 @@ export const getUserCompanions = async (
 
 export const newCompanionPermissions = async () => {
   const { userId, has } = await auth();
+  if (!userId) return false;
   const supabase = createSupabaseClient();
 
   let limit = 0;
