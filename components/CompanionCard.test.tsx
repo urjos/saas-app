@@ -20,7 +20,7 @@ const props = {
   subject: "science",
   duration: 45,
   color: "#E5D0FF",
-};
+} as const;
 
 describe("CompanionCard", () => {
   beforeEach(() => vi.clearAllMocks());

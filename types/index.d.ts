@@ -5,34 +5,28 @@
 //   accountId: string;
 // };
 
-enum Subject {
-  maths = "maths",
-  language = "language",
-  science = "science",
-  history = "history",
-  coding = "coding",
-  geography = "geography",
-  economics = "economics",
-  finance = "finance",
-  business = "business",
-}
+type Subject = (typeof import("@/constants").subjects)[number];
+type VoiceOption = (typeof import("@/constants").voiceOptions)[number];
+type StyleOption = (typeof import("@/constants").styleOptions)[number];
 
-type Companion = Models.DocumentList<Models.Document> & {
-  $id: string;
+interface Companion {
+  id: string;
   name: string;
   subject: Subject;
   topic: string;
+  voice: VoiceOption;
+  style: StyleOption;
   duration: number;
-  bookmarked: boolean;
-};
+  author: string;
+  created_at?: string;
+  bookmarked?: boolean;
+}
 
-
-interface GetAllCompanions {
+type GetAllCompanions = Partial<Pick<Companion, "topic">> & {
   limit?: number;
   page?: number;
-  subject?: string | string[];
-  topic?: string | string[];
-}
+  subject?: Subject | string;
+};
 
 interface BuildClient {
   key?: string;
@@ -57,19 +51,18 @@ interface Avatar {
   className?: string;
 }
 
-
 interface SavedMessage {
   role: "user" | "system" | "assistant";
   content: string;
 }
 
-interface CompanionComponentProps {
+type CompanionComponentProps = Pick<
+  Companion,
+  "subject" | "topic" | "name"
+> & {
   companionId: string;
-  subject: string;
-  topic: string;
-  name: string;
   userName: string;
   userImage: string;
   voice: string;
   style: string;
-}
+};

@@ -55,7 +55,7 @@ const props = {
   userImage: "https://example.com/avatar.png",
   voice: "male",
   style: "casual",
-};
+} as const;
 
 const mainButton = (name: string) => screen.getByRole("button", { name });
 

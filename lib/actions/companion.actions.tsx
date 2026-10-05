@@ -41,7 +41,7 @@ export const getAllCompanions = async ({
   page = 1,
   subject,
   topic,
-}: GetAllCompanions) => {
+}: GetAllCompanions): Promise<Companion[]> => {
   const supabase = createSupabaseClient();
 
   let query = supabase.from("companions").select();
@@ -62,7 +62,7 @@ export const getAllCompanions = async ({
 
   if (error) throw new Error(error.message);
 
-  return companions;
+  return (companions ?? []) as unknown as Companion[];
 };
 
 export const getCompanion = async (id: string) => {
@@ -91,7 +91,9 @@ export const addToSessionHistory = async (companionId: string) => {
   return data;
 };
 
-export const getRecentSessions = async (limit = 10) => {
+export const getRecentSessions = async (
+  limit = 10,
+): Promise<Companion[]> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("session_history")
@@ -101,10 +103,17 @@ export const getRecentSessions = async (limit = 10) => {
 
   if (error) throw new Error(error.message);
 
-  return data.map(({ companions }) => companions);
+  return (data ?? [])
+    .map(({ companions }) =>
+      Array.isArray(companions) ? companions[0] : companions,
+    )
+    .filter(Boolean) as unknown as Companion[];
 };
 
-export const getUserSessions = async (userId: string, limit = 10) => {
+export const getUserSessions = async (
+  userId: string,
+  limit = 10,
+): Promise<Companion[]> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("session_history")
@@ -115,10 +124,16 @@ export const getUserSessions = async (userId: string, limit = 10) => {
 
   if (error) throw new Error(error.message);
 
-  return data.map(({ companions }) => companions);
+  return (data ?? [])
+    .map(({ companions }) =>
+      Array.isArray(companions) ? companions[0] : companions,
+    )
+    .filter(Boolean) as unknown as Companion[];
 };
 
-export const getUserCompanions = async (userId: string) => {
+export const getUserCompanions = async (
+  userId: string,
+): Promise<Companion[]> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("companions")
@@ -127,7 +142,7 @@ export const getUserCompanions = async (userId: string) => {
 
   if (error) throw new Error(error.message);
 
-  return data;
+  return (data ?? []) as unknown as Companion[];
 };
 
 export const newCompanionPermissions = async () => {
@@ -193,7 +208,9 @@ export const removeBookmark = async (companionId: string, path: string) => {
   return data;
 };
 
-export const getBookmarkedCompanions = async (userId: string) => {
+export const getBookmarkedCompanions = async (
+  userId: string,
+): Promise<Companion[]> => {
   const supabase = createSupabaseClient();
   const { data, error } = await supabase
     .from("bookmarks")
@@ -203,7 +220,11 @@ export const getBookmarkedCompanions = async (userId: string) => {
     throw new Error(error.message);
   }
   // We don't need the bookmarks data, so we return only the companions
-  return data.map(({ companions }) => companions);
+  return (data ?? [])
+    .map(({ companions }) =>
+      Array.isArray(companions) ? companions[0] : companions,
+    )
+    .filter(Boolean) as unknown as Companion[];
 };
 
 export const getBookmarkedCompanionIds = async () => {

@@ -4,15 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-interface CompanionCardProps {
-  id: string;
-  name: string;
-  topic: string;
-  subject: string;
-  duration: number;
+type CompanionCardProps = Pick<
+  Companion,
+  "id" | "name" | "topic" | "subject" | "duration"
+> & {
   color: string;
-  bookmarked: boolean;
-}
+  bookmarked?: boolean;
+};
 
 const CompanionCard = ({
   id,
