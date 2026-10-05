@@ -71,7 +71,9 @@ export const getAllCompanions = async ({
   return (companions ?? []) as unknown as Companion[];
 };
 
-export const getCompanion = async (id: string): Promise<Companion | null> => {
+export const getCompanion = async (
+  id: string,
+): Promise<ActionResult<Companion>> => {
   const supabase = createSupabaseClient();
 
   const { data, error } = await supabase
@@ -79,9 +81,15 @@ export const getCompanion = async (id: string): Promise<Companion | null> => {
     .select()
     .eq("id", id);
 
-  if (error || !data || data.length === 0) return null;
+  if (error) {
+    return { ok: false, error: error.message };
+  }
 
-  return data[0] as unknown as Companion;
+  if (!data || data.length === 0) {
+    return { ok: false, error: "Companion not found" };
+  }
+
+  return { ok: true, data: data[0] as unknown as Companion };
 };
 
 export const addToSessionHistory = async (companionId: string) => {
