@@ -5,6 +5,8 @@ const authFile = "playwright/.auth/user.json";
 
 // Inicia sesión una sola vez y guarda cookies/localStorage para reutilizarlos
 setup("autenticarse con Clerk", async ({ page }) => {
+  setup.setTimeout(120_000);
+
   const email = process.env.E2E_CLERK_USER_EMAIL;
   if (!email) {
     throw new Error("Falta E2E_CLERK_USER_EMAIL en .env.local");
