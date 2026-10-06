@@ -196,7 +196,7 @@ const CompanionComponent = ({
             if (message.role === "assistant") {
               return (
                 <p key={index} className="max-sm:text-sm">
-                  {name.split(" ")[0].replace("/[.,]/g, ", "")}:{" "}
+                  {name?.split(" ")[0].replace("/[.,]/g, ", "")}:{" "}
                   {message.content}
                 </p>
               );
